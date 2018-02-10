@@ -12,6 +12,7 @@
 #include "astro/j2AccelerationModel.hpp"
 #include "astro/orbitalElementConversions.hpp"
 #include "astro/twoBodyMethods.hpp"
+#include "astro/rotationalBodyAccelerationModel.hpp"
 #include "astro/solarRadiationPressureAccelerationModel.hpp"
 #include "astro/stateVectorIndices.hpp"
 
