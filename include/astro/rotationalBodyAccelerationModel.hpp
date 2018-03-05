@@ -38,7 +38,7 @@ namespace astro
  */
 template< typename Inertia, typename Vector3 >
 Vector3 computeRotationalBodyAcceleration( const Inertia    principleInertia,
-                                        const Vector3& angularVelocity )
+                                           const Vector3& angularVelocity )
 {
     Vector3 acceleration = angularVelocity;
 
