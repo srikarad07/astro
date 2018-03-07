@@ -53,7 +53,7 @@ template< typename Real, typename Vector3, typename Matrix33 >
 Vector3 computeGravityGradientTorque( const Real        gravitationalParameter,
                                       const Real        radius,
                                       const Vector3     principleInertia,
-                                      const Matrix33   directionCosineMatrix )
+                                      const Matrix33    directionCosineMatrix )
 {
     Vector3 gravityGradientTorque;
     Vector3 postMultiplier; 

@@ -38,12 +38,11 @@ Vector3 eulerKinematicDifferential( const Vector3& rotationSequence,
                                     const Vector3& angularRates )
                                     // const Vector3 orbitalAngularVelocity )
 {
-    // Vector3 rotation321(3, 2, 1);
+    Vector3 rotation321(3, 2, 1);
     typedef Eigen::Matrix< double, 3, 3 > Matrix33;  
     Matrix33 directionCosineMatrix, tempDirectionCosineMatrix;
 
-    // if ( true == rotationSequence.isapprox(rotation321) )
-    if ( 0 == 0 )
+    if ( true == rotationSequence.isApprox(rotation321) )
     {
         directionCosineMatrix       =   Eigen::AngleAxisd(sml::convertDegreesToRadians(-90.0), 
                                                             Eigen::Vector3d::UnitX() )*
