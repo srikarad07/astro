@@ -19,7 +19,7 @@
 namespace astro
 {
 
-//  Compute the gravity gradient torque on orbiting body under the inlfuence of uniform 
+//  Compute the gravity gradient torque on a orbiting body under the influence of uniform 
 //  gravity field of a central body. 
 /*  Computes the gravity gradient torque acting on a rigid orbiting body under the 
 *   influence of a uniform gravity field of a rotating body.
