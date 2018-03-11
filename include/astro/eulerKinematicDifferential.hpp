@@ -27,51 +27,44 @@ namespace astro
 /*  Computes the euler rates for the time dependence between two reference frames. 
 *   The expression is defined as per 'Spacecraft Vehicle Dynamics and Control Second Edition' 
 *   by Bong Wie (Page-389). The expression describes the relationship of euler rates with the 
-*   angular velocity expresses in body reference frame relative to newtonian inertial frame. 
+*   angular velocity expressed in body reference frame relative to newtonian inertial frame. 
 *    
 */
 
-// template< typename Vector3, typename Matrix33 > 
-template< typename Vector3 > 
-Vector3 eulerKinematicDifferential( const Vector3& rotationSequence, 
-                                    const Vector3& eulerAngles,
-                                    const Vector3& angularRates )
+typedef Eigen::Matrix< double, 3, 3 > Matrix33;  
+
+template< typename Vector3, typename Real > 
+Vector3 eulerKinematicDifferential( Matrix33& rotationSequence, 
+                                    Vector3& eulerAngles,
+                                    const Vector3& angularRates,
+                                    const Real meanMotion )
                                     // const Vector3 orbitalAngularVelocity )
 {
-    Vector3 rotation321(3, 2, 1);
-    typedef Eigen::Matrix< double, 3, 3 > Matrix33;  
+    // Vector3 rotation321(3, 2, 1);
     Matrix33 directionCosineMatrix, tempDirectionCosineMatrix;
-
-    if ( true == rotationSequence.isApprox(rotation321) )
+    Matrix33 tempRotationSequence; 
+    if ( 0 == 0 )
     {
-        directionCosineMatrix       =   Eigen::AngleAxisd(sml::convertDegreesToRadians(-90.0), 
-                                                            Eigen::Vector3d::UnitX() )*
-                                        Eigen::AngleAxisd(sml::convertDegreesToRadians(0.0), 
-                                                            Eigen::Vector3d::UnitY() )*
-                                        Eigen::AngleAxisd(sml::convertDegreesToRadians(-90.0), 
-                                                            Eigen::Vector3d::UnitZ() );
-        tempDirectionCosineMatrix   =   Eigen::AngleAxisd(sml::convertDegreesToRadians(-90.0),
-                                                            Eigen::Vector3d::UnitX() )*
-                                        Eigen::AngleAxisd(sml::convertDegreesToRadians(0.0),
-                                                            Eigen::Vector3d::UnitY() );
+        tempRotationSequence << 0.0, 0.0, 0.0, 
+                                rotationSequence.col(1),
+                                rotationSequence.col(2);
+        directionCosineMatrix          
+                         = astro::computeEulerAngleToDcmConversionMatrix( rotationSequence, eulerAngles );
+        eulerAngles[0]   = 0.0; 
+        tempDirectionCosineMatrix      
+                         = astro::computeEulerAngleToDcmConversionMatrix( tempRotationSequence, eulerAngles ); 
     }
      
-
-    // k = Eigen::AngleAxisd(sml::convertDegreesToRadians(-90.0), Eigen::Vector3d::UnitX() )*
-    //     Eigen::AngleAxisd(sml::convertDegreesToRadians(0.0), Eigen::Vector3d::UnitY() );
-    // Eigen::Matrix3d temp; 
-    // temp = k.transpose();
-
-    // Vector3 col1 = m.col(2);   
-    // Vector3 col2 = k.col(1); 
-    // Vector3 col3 = Eigen::Vector3d::UnitX(); 
-
+    Vector3 a2;
+    a2 = directionCosineMatrix.col(1);
     Matrix33 angularVelocityRotationMatrix;  
     angularVelocityRotationMatrix.col(0) = directionCosineMatrix.col(2); 
     angularVelocityRotationMatrix.col(1) = tempDirectionCosineMatrix.col(1);
     angularVelocityRotationMatrix.col(2) = Eigen::Vector3d::UnitX(); 
 
-    Vector3 attitudeDerivative = angularVelocityRotationMatrix * angularRates; 
+    Vector3 multiplier = angularRates + meanMotion*a2;
+
+    Vector3 attitudeDerivative = angularVelocityRotationMatrix.jacobiSvd().solve(multiplier); 
     return attitudeDerivative; 
 }
 

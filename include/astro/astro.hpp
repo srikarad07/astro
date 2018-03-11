@@ -9,6 +9,7 @@
 
 #include "astro/constants.hpp"
 #include "astro/centralBodyAccelerationModel.hpp"
+#include "astro/eulerAngleToDcmTransformation.hpp"
 #include "astro/eulerKinematicDifferential.hpp"
 #include "astro/gravityGradientTorqueModel.hpp"
 #include "astro/j2AccelerationModel.hpp"
@@ -17,5 +18,7 @@
 #include "astro/rotationalBodyAccelerationModel.hpp"
 #include "astro/solarRadiationPressureAccelerationModel.hpp"
 #include "astro/stateVectorIndices.hpp"
+
+#include "astro/loadCsvFile.hpp"
 
 #endif // ASTRO_HPP
