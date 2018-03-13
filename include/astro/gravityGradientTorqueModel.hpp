@@ -40,7 +40,7 @@ namespace astro
 *
 *   @tparam         Real                        Real type
 *   @tparam         Vector3                     3-vector type
-*   @tparam         Matrix33                   3x3 matrix type
+*   @tparam         Matrix33                    3x3 matrix type
 *   @param[in]      gravitationalParamater      Gravitational Parameter of the central body 
 *                                                                   [km^3 s⁻2]
 *   @param[in]      radius                      Instantanious radial distance of the orbiting
