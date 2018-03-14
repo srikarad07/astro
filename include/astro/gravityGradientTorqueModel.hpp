@@ -67,10 +67,9 @@ Vector3 computeGravityGradientTorque( const Real        gravitationalParameter,
                                                 directionCosineMatrix(0,2) *  
                                                         directionCosineMatrix(1,2);   
     gravityGradientTorque[0]        = ( 3*gravitationalParameter / (2*radius) ) * postMultiplier[0];
-    gravityGradientTorque[0]        = ( 3*gravitationalParameter / (2*radius) ) * postMultiplier[1];
-    gravityGradientTorque[0]        = ( 3*gravitationalParameter / (2*radius) ) * postMultiplier[2];
-
-//     std::cout << "Gravity gradient torque: " << gravityGradientTorque[2] << std::endl;    
+    gravityGradientTorque[1]        = ( 3*gravitationalParameter / (2*radius) ) * postMultiplier[1];
+    gravityGradientTorque[2]        = ( 3*gravitationalParameter / (2*radius) ) * postMultiplier[2];
+  
     return gravityGradientTorque;          
 }
 
