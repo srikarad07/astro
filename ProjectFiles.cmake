@@ -11,6 +11,7 @@ set(TEST_SRC
   "${TEST_SRC_PATH}/testEulerToDcmTransformation.cpp"
   "${TEST_SRC_PATH}/testJ2AccelerationModel.cpp"
   "${TEST_SRC_PATH}/testOrbitalElementConversions.cpp"
+  "${TEST_SRC_PATH}/testQuaternionDifferential.cpp"
   "${TEST_SRC_PATH}/testStateVectorIndices.cpp"
   "${TEST_SRC_PATH}/testSolarRadiationPressureAccelerationModel.cpp"
   "${TEST_SRC_PATH}/testTwoBodyMethods.cpp"
