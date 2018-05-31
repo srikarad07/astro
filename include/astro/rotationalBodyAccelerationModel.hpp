@@ -40,13 +40,17 @@ template< typename Inertia, typename Vector3 >
 Vector3 computeRotationalBodyAcceleration( const Inertia    principleInertia,
                                            const Vector3& angularVelocity )
 {
-    Vector3 acceleration = angularVelocity;
+    Vector3 torque = angularVelocity;
 
-    acceleration[ 0 ] = ( principleInertia[1] - principleInertia[2] ) / ( angularVelocity[1]*angularVelocity[2] ); 
-    acceleration[ 1 ] = ( principleInertia[2] - principleInertia[0] ) / ( angularVelocity[2]*angularVelocity[0] );
-    acceleration[ 2 ] = ( principleInertia[0] - principleInertia[1] ) / ( angularVelocity[0]*angularVelocity[1] ); 
+    torque[ 0 ] = ( ( principleInertia[1] - principleInertia[2] ) * ( angularVelocity[1]*angularVelocity[2] ) ); 
+    torque[ 1 ] = ( ( principleInertia[2] - principleInertia[0] ) * ( angularVelocity[2]*angularVelocity[0] ) );
+    torque[ 2 ] = ( ( principleInertia[0] - principleInertia[1] ) * ( angularVelocity[0]*angularVelocity[1] ) );
 
-    return acceleration;
+    if ( isfinite( torque.array() ).any() != 1 ) 
+    {
+        std::cout << "WARNING:: The input conditions have resulted in an 'NaN' condition. " << std::endl; 
+    }
+    return torque;
 }
 
 } // namespace astro

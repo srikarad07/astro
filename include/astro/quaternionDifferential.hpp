@@ -38,16 +38,16 @@ template < typename Vector3, typename Vector4 >
 Vector4 computeQuaternionDerivative(  const Vector4 quaternion, 
                                       const Vector3 angularVelocity )
 {
-    typedef Eigen::Matrix< double, 4, 4 > Matrix44;
-    
-    Matrix44 skewSymmetricMatrix; 
-    
-    skewSymmetricMatrix << 0.0, angularVelocity[2], -angularVelocity[1], angularVelocity[0],
-                           angularVelocity[2], 0.0, angularVelocity[0], angularVelocity[1],
-                           angularVelocity[1], -angularVelocity[0], 0.0, angularVelocity[2],
-                           -angularVelocity[0], -angularVelocity[1], -angularVelocity[2], 0.0;
+    Vector4 quaternionDerivative; 
+    quaternionDerivative[0]     = ( angularVelocity[2] * quaternion[1] - angularVelocity[1] * 
+                                        quaternion[2] + angularVelocity[0] * quaternion[3] ) / 2.0;
+    quaternionDerivative[1]     = ( - angularVelocity[2] * quaternion[0] + angularVelocity[0] * 
+                                        quaternion[2] + angularVelocity[1] * quaternion[3] ) / 2.0;
+    quaternionDerivative[2]     = ( angularVelocity[1] * quaternion[0] - angularVelocity[0] * 
+                                        quaternion[1] + angularVelocity[2] * quaternion[3] ) / 2.0;
+    quaternionDerivative[3]     = ( - angularVelocity[0] * quaternion[0] - angularVelocity[1] * 
+                                        quaternion[1] - angularVelocity[2] * quaternion[2] ) / 2.0;
 
-    Vector4 quaternionDerivative    = ( skewSymmetricMatrix * quaternion ) / 2; 
     return quaternionDerivative;
 }   
 

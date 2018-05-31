@@ -4,19 +4,34 @@
  * See accompanying file LICENSE.md or copy at http://opensource.org/licenses/MIT
  */
 
- #ifndef QUATERNION_TO_EULER_ANGLE_TRANSFORMATION_HPP
- #define QUATERNION_TO_EULER_ANGLE_TRANSFORMATION_HPP
+#ifndef ASTRO_QUATERNION_TO_EULER_ANGLE_TRANSFORMATION_HPP
+#define ASTRO_QUATERNION_TO_EULER_ANGLE_TRANSFORMATION_HPP
+
+#include <iostream>
+#include <stdexcept>
 
 #include <Eigen/Eigen>
 
 namespace astro
 {
 
-template < typename Vector3, typename Vector4 > 
-Vector3 transformQuaternionToEulerAngles( Vector4 quaternions )
+// typedef double Real; 
+
+typedef Eigen::Matrix< double, 4, 1 > Vector4; 
+typedef Eigen::Matrix< double, 3, 1 > Vector3; 
+
+inline Vector3 transformQuaternionToEulerAngles( const Vector4 quaternion )
 {
-    auto euler = quaternions.toRotationMatrix().eulerAngles(0, 1, 2);
+    Eigen::Quaterniond quaternionNew(   quaternion[3], 
+                                        quaternion[0], 
+                                        quaternion[1], 
+                                        quaternion[2] );
+    
+    const Vector3 euler = quaternionNew.toRotationMatrix().eulerAngles(0, 1, 2);
+
+    return euler;
 }
 
 } // astro 
- #endif 
+
+#endif 

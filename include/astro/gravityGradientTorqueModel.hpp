@@ -49,27 +49,38 @@ namespace astro
 *   @param[in]      directionCosineMatrix       Direction cosine matrix []
 */ 
 
-template< typename Real, typename Vector3, typename Matrix33 >
+template< typename Real, typename Vector3, typename Vector4 > 
 Vector3 computeGravityGradientTorque( const Real        gravitationalParameter,
                                       const Real        radius,
                                       const Vector3     principleInertia,
-                                      const Matrix33    directionCosineMatrix )
+                                      const Vector4     quaternionState )
 {
     Vector3 gravityGradientTorque;
-    Vector3 postMultiplier; 
-    postMultiplier[0]               = ( principleInertia[2] - principleInertia[1] ) * 
-                                                directionCosineMatrix(1,2) *  
-                                                        directionCosineMatrix(2,2);
-    postMultiplier[1]               = ( principleInertia[2] - principleInertia[0] ) * 
-                                                directionCosineMatrix(0,2) *  
-                                                        directionCosineMatrix(2,2);
-    postMultiplier[2]               = ( principleInertia[0] - principleInertia[1] ) * 
-                                                directionCosineMatrix(0,2) *  
-                                                        directionCosineMatrix(1,2);   
-    gravityGradientTorque[0]        = ( 3*gravitationalParameter / (2*radius) ) * postMultiplier[0];
-    gravityGradientTorque[1]        = ( 3*gravitationalParameter / (2*radius) ) * postMultiplier[1];
-    gravityGradientTorque[2]        = ( 3*gravitationalParameter / (2*radius) ) * postMultiplier[2];
+    Vector3 postMultiplier;
+
+    Real directionCosine13          = 2.0 * ( quaternionState[0]*quaternionState[2] - quaternionState[3]*quaternionState[1] ); 
+    Real directionCosine23          = 2.0 * ( quaternionState[1]*quaternionState[2] + quaternionState[3]*quaternionState[1] );
+    Real directionCosine33          = quaternionState[3]*quaternionState[3] - quaternionState[0]*quaternionState[0] - quaternionState[1]*quaternionState[1] + quaternionState[2]*quaternionState[2];
+
+    // std::cout << "Direction cosine matrice values: " << directionCosine13 << std::endl; 
+    // std::cout << "Direction cosine matrice values: " << directionCosine23 << std::endl; 
+    // std::cout << "Direction cosine matrice values: " << directionCosine33 << std::endl; 
+
+    postMultiplier[0]               = ( principleInertia[2] - principleInertia[1] ) * directionCosine23 *  directionCosine33;
+    postMultiplier[1]               = ( principleInertia[2] - principleInertia[0] ) * directionCosine13 *  directionCosine33;
+    postMultiplier[2]               = ( principleInertia[0] - principleInertia[1] ) * directionCosine13 *  directionCosine23;   
+    
+    // std::cout << "Post multiplier values: \n" << postMultiplier << std::endl; 
+    // std::cout << "the difference in principle inertia's : \n " << ( principleInertia[0] - principleInertia[1] ) << std::endl;  
+    // std::cout << "Direction cosine matrice values: " << directionCosine23 << std::endl; 
+    // std::cout << "Direction cosine matrice values: " << directionCosine33 << std::endl; 
+
+    gravityGradientTorque[0]        = ( 3.0 * gravitationalParameter / (radius * radius * radius) ) * postMultiplier[0];
+    gravityGradientTorque[1]        = ( 3.0 * gravitationalParameter / (radius * radius * radius) ) * postMultiplier[1];
+    gravityGradientTorque[2]        = ( 3.0 * gravitationalParameter / (radius * radius * radius) ) * postMultiplier[2];
   
+    // std::cout << "Gravity gradient torque: \n" << gravityGradientTorque << std::endl; 
+
     return gravityGradientTorque;          
 }
 

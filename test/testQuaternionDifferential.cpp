@@ -16,7 +16,7 @@ typedef double Real;
 typedef Eigen::Matrix< double, 4, 1 > Vector4; 
 typedef Eigen::Matrix< double, 3, 1 > Vector3; 
 
-TEST_CASE( "Test case 1: Test the quternion differential equations for a set of quaternions", "[quaternions, angularVelocity]" )
+TEST_CASE( "Test case 1: Test the quaternion differential equations for a set of quaternions", "[quaternions, angularVelocity]" )
 {
 const Real tolerance = 1.0e-12;  
 
