@@ -9,6 +9,7 @@
 
 #include "astro/constants.hpp"
 #include "astro/centralBodyAccelerationModel.hpp"
+#include "astro/cascadeSaturationController.hpp"
 #include "astro/eulerAngleToDcmTransformation.hpp"
 #include "astro/eulerKinematicDifferential.hpp"
 #include "astro/eulerToQuaternion.hpp"
