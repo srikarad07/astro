@@ -33,14 +33,14 @@ namespace astro
 *
 */
 
-template < typename Vector3, typename Vector4, typename Real >
+template < typename Vector3, typename Vector4, typename Matrix33 >
 Vector3 computeQuaternionControlTorque( const Vector4 quaternionReference, 
                                         const Vector4 quaternionCurrent, 
                                         const Vector3 angularVelocity, 
-                                        const Real quaternionControlGain, 
-                                        const Vector3 angularVelocityControlGainMatrix )    
+                                        const Matrix33 quaternionControlGainMatrix, 
+                                        const Matrix33 angularVelocityControlGainMatrix )    
 {
-    Vector4 quaternionError; 
+    Vector3 quaternionError; 
     quaternionError[0]          =   quaternionReference[3]*quaternionCurrent[0] + 
                                     quaternionReference[2]*quaternionCurrent[1] - 
                                     quaternionReference[1]*quaternionCurrent[2] - 
@@ -53,18 +53,18 @@ Vector3 computeQuaternionControlTorque( const Vector4 quaternionReference,
                                     quaternionReference[0]*quaternionCurrent[1] + 
                                     quaternionReference[3]*quaternionCurrent[2] - 
                                     quaternionReference[2]*quaternionCurrent[3];  
-    quaternionError[3]          =   quaternionReference[0]*quaternionCurrent[0] + 
-                                    quaternionReference[1]*quaternionCurrent[1] + 
-                                    quaternionReference[2]*quaternionCurrent[2] + 
-                                    quaternionReference[3]*quaternionCurrent[3];
+    // quaternionError[3]          =   quaternionReference[0]*quaternionCurrent[0] + 
+    //                                 quaternionReference[1]*quaternionCurrent[1] + 
+    //                                 quaternionReference[2]*quaternionCurrent[2] + 
+    //                                 quaternionReference[3]*quaternionCurrent[3];
 
-    Vector3 controlTorque; 
-    controlTorque[0]            =  - quaternionControlGain*quaternionError[0]  
-                                        - angularVelocityControlGainMatrix[0]*angularVelocity[0];
-    controlTorque[1]            =  - quaternionControlGain*quaternionError[1]  
-                                        - angularVelocityControlGainMatrix[1]*angularVelocity[1]; 
-    controlTorque[2]            =  - quaternionControlGain*quaternionError[2]  
-                                        - angularVelocityControlGainMatrix[2]*angularVelocity[2];
+    const Vector3 controlTorque = - quaternionControlGainMatrix * quaternionError - angularVelocityControlGainMatrix * angularVelocity; 
+    // controlTorque[0]            =  - quaternionControlGain*quaternionError[0]  
+    //                                     - angularVelocityControlGainMatrix[0]*angularVelocity[0];
+    // controlTorque[1]            =  - quaternionControlGain*quaternionError[1]  
+    //                                     - angularVelocityControlGainMatrix[1]*angularVelocity[1]; 
+    // controlTorque[2]            =  - quaternionControlGain*quaternionError[2]  
+    //                                     - angularVelocityControlGainMatrix[2]*angularVelocity[2];
     
     return controlTorque; 
 } // template

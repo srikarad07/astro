@@ -151,17 +151,17 @@ inline Vector3 computeControlTorqueWithSaturationCascadeController( const Real  
                                                         principleInertiaVector, 
                                                         initialQuaternion ); 
 
-    // const Matrix33 attitudeControlGainMatrix    = std::get<0>(controlGainMatrices); 
-    const Matrix33 attitudeControlGainMatrix2   = std::get<1>(controlGainMatrices);
+    const Matrix33 attitudeControlGainMatrix    = std::get<0>(controlGainMatrices); 
+    // const Matrix33 attitudeControlGainMatrix2   = std::get<1>(controlGainMatrices);
     // const Matrix33 velocityControlGainMatrix    = std::get<2>(controlGainMatrices);
     const Matrix33 principleInertiaMatrix           = principleInertiaVector.asDiagonal(); 
     
-    const Real k = naturalFrequency * naturalFrequency; 
+    const Real k = 2 * naturalFrequency * naturalFrequency; 
     const Real c = 2 * naturalFrequency * dampingRatio; 
     
-    const Matrix33 attitudeControlGainMatrix    =  k * principleInertiaMatrix; 
+    // const Matrix33 attitudeControlGainMatrix    =  k * principleInertiaMatrix; 
     // const Matrix33 attitudeControlGainMatrix2   =  ;
-    const Matrix33 velocityControlGainMatrix    =  c * principleInertiaMatrix;
+    const Matrix33 velocityControlGainMatrix    =  4 * c * principleInertiaMatrix;
     // std::cout << "K: " << attitudeControlGainMatrix  << std::endl; 
     // std::cout << "P: " << attitudeControlGainMatrix2 << std::endl; 
     // std::cout << "C: " << velocityControlGainMatrix << std::endl; 
@@ -203,13 +203,13 @@ inline Vector3 computeControlTorqueWithSaturationCascadeController( const Real  
     // std::cout << "P * q_e " << attitudeControlGainMatrix2 * quaternionError << std::endl; 
     // std::cout << "Saturation: " << saturationFunction( attitudeControlGainMatrix2 * quaternionError, slewRateSaturation ) << std::endl; 
     // Real endOfCoastingPhaseTime; 
-    const Real L = ( c / k ) * 0.2;
+    const Real L = ( c / k ) * slewRateSaturation;
     // std::cout << "L matrix: " << L << std::endl; 
     // std::cout << "Saturation function: " << saturationFunction( attitudeControlGainMatrix * quaternionError, L ) << std::endl; 
     // std::cout << "Control first term: " << attitudeControlGainMatrix * saturationFunction( attitudeControlGainMatrix * quaternionError, L )  << std::endl; 
     // std::cout << "Control second term: " << velocityControlGainMatrix * currentAttitudeRate << std::endl; 
     // std::cout << "Control first + second: " << ( attitudeControlGainMatrix * saturationFunction( quaternionError, L ) ) + ( velocityControlGainMatrix * currentAttitudeRate ) << std::endl; 
-    // const Vector3 commandedControlTorque = - ( attitudeControlGainMatrix * saturationFunction( quaternionError, L ) + velocityControlGainMatrix * currentAttitudeRate );  
+    // const Vector3 commandedControlTorque = - ( attitudeControlGainMatrix * quaternionError + velocityControlGainMatrix * currentAttitudeRate );  
     const Vector3 commandedControlTorque = - ( attitudeControlGainMatrix * saturationFunction( quaternionError, L ) + velocityControlGainMatrix * currentAttitudeRate ); 
 
     // std::cout << "Commanded control torque: " << commandedControlTorque << std::endl; 
