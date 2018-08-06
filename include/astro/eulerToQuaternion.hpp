@@ -22,12 +22,18 @@ typedef Eigen::Quaterniond Quaternion;
 
 inline Vector4 transformEulerToQuaternion( const Vector3 euler )
 {
+    // Convert the euler to quaternion with the use of the eigen functions. The order of the multiplication 
+    // is for the euler rotation sequence '321'/'ZYX'. 
     Quaternion tempQuaternion;
-    tempQuaternion  =     Eigen::AngleAxisd( euler[0], Eigen::Vector3d::UnitX() )
+    tempQuaternion  =     Eigen::AngleAxisd( euler[2], Eigen::Vector3d::UnitZ() )
                         * Eigen::AngleAxisd( euler[1], Eigen::Vector3d::UnitY() )
-                        * Eigen::AngleAxisd( euler[2], Eigen::Vector3d::UnitZ() );
+                        * Eigen::AngleAxisd( euler[0], Eigen::Vector3d::UnitX() );
     
-    const Vector4 quaternion( tempQuaternion.coeffs() ); 
+    Vector4 quaternion; 
+    quaternion[0]       = tempQuaternion.z(); 
+    quaternion[1]       = tempQuaternion.y(); 
+    quaternion[2]       = tempQuaternion.x(); 
+    quaternion[3]       = tempQuaternion.w(); 
     
     return quaternion; 
 }
