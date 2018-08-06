@@ -4,10 +4,10 @@
  * See accompanying file LICENSE.md or copy at http://opensource.org/licenses/MIT
  */
 
+#include <iostream>
+#include <iomanip>
 #include <cmath>
-#include <vector>
-
-#include <iostream> // remove later
+#include <limits>
 
 #include <Eigen/Dense>
 #include <catch.hpp>
@@ -22,7 +22,7 @@ namespace tests
 typedef double Real; 
 typedef Eigen::Matrix< double, 3, 1 > Vector3;
 
-TEST_CASE("Compute solar radiation pressure torque for an arbitrary case", "[solar_radiation_pressure, acceleration, models]" )
+TEST_CASE("Test 1: Compute solar radiation pressure torque for an arbitrary case", "[solar_radiation_pressure, acceleration, models]" )
 {
 
     // Set expected solar radiation pressure torque vector [m/s^2]
@@ -92,6 +92,62 @@ TEST_CASE("Compute solar radiation pressure torque for an arbitrary case", "[sol
 
 }
 
+TEST_CASE( "Test 2: Test the solar radiation torque model with Firesat (SMAD).", "[solar_radiation_pressure, acceleration, models]")
+{
+    /*  The function solar radiation disturbance torque is verified by using the values presented for 
+    *   firesat & SCS spacecraft given in Space Mission Engineering - The New SMAD by James Wertz,  
+    *   David Everett & Jeffery Puschell, Space Technology Library, Vol. 28, Microsom Press 2011 
+    */
+    
+    // Set the tolerance for the tests. 
+    const Real tolerance    = 1e-8; 
+
+    // Set the area of the surface facing the s/c [m^2] 
+    const Real area         = 1.2 * 1.1; 
+
+    // Set the mass of the s/c [kg]
+    const Real mass        = 215.0; 
+
+    // Set the speed of light [m sec^-1]
+    const Real speedOfLight   = 3e8;
+
+    // Set the Solar constant [W m^-2]
+    const Real solarConstant  = 1367.0; 
+
+    // Set the radiation pressure coefficient [adim]
+    const Real radiationPressureCoefficient = 1.0 + 0.6; // This is given in SMAD as (1+q)
+
+    // Set the vector to source vector [adim]
+    const Vector3 vectorToSource( 1.0, 0.0, 0.0 );
+
+    // Calculate the radiation pressure value [N m^-2]   
+    const Real radiationPressure    = solarConstant / speedOfLight;
+
+    // Set the center of pressure.
+    const Real centerOfSolarPressure    = 0.1;
+
+    // Set the center of mass.
+    const Real centerOfMass             = 0.0; 
+
+    // Compute the solar radiation disturbance torque. 
+    const Vector3 computedSolarRadiationTorque      = astro::computeSolarRadiationDisturbanceTorque( centerOfSolarPressure, 
+                                                                                    centerOfMass, 
+                                                                                    radiationPressure,
+                                                                                    radiationPressureCoefficient, 
+                                                                                    vectorToSource, 
+                                                                                    area, 
+                                                                                    mass ); 
+
+    // Given in SMAD for Firesat example. 
+    const Vector3 expectedSolarRadiationTorque( -9.6e-7, 0.0, 0.0 );
+
+    // Compute the error in the solar radiation pressure torque.
+    const Vector3 errorInSolarRadiationPressureTorque = expectedSolarRadiationTorque - computedSolarRadiationTorque; 
+
+    REQUIRE( errorInSolarRadiationPressureTorque.array()[0] < tolerance ); 
+    REQUIRE( errorInSolarRadiationPressureTorque.array()[1] < tolerance ); 
+    REQUIRE( errorInSolarRadiationPressureTorque.array()[2] < tolerance ); 
+}
 
 } //namespace tests    
 
